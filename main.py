@@ -35,7 +35,7 @@ def generate_frailty_care_plan(
 ):
     # Initialize OpenAI Embeddings
     embeddings = OpenAIEmbeddings(
-        model="text-embedding-ada-002",
+        model="text-embedding-3-large",
         openai_api_key=openai_api_key
     )
 
@@ -50,7 +50,7 @@ def generate_frailty_care_plan(
     index = pc.Index(index_name)
 
     # Initialize vector store
-    from langchain_pinecone import Pinecone as PineconeVectorStore
+    from langchain_pinecone.vectorstores import Pinecone as PineconeVectorStore
 
     vectorstore = PineconeVectorStore(
         index=index,
@@ -194,7 +194,7 @@ Here is an example format of a care plan:
     }
 
     # Run the first invocation
-    first_result = qa({"query": str(input_data)})
+    first_result = qa.invoke({"query": str(input_data)})
 
     # Run the second invocation
     final_care_plan = chat([
