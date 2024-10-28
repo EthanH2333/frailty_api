@@ -69,9 +69,9 @@ def generate_frailty_care_plan(
     You are an expert chatbot focused on frailty care, analyzing a patient's condition based on their PRISMA-7 survey responses and test results. Your task is to provide a factual analysis based solely on the given information. Do not make assumptions or infer information that is not explicitly stated.
 
     Patient's PRISMA-7 Responses and GAIT/TUG Test Results:
-    <input>
+    <query>
     {query}
-    </input>
+    </query>
 
     Relevant context from the knowledge base:
     <context>
@@ -99,7 +99,7 @@ def generate_frailty_care_plan(
     """)
 
     second_invocation_prompt = PromptTemplate(
-        input_variables=["input", "analysis", "example"],
+        input_variables=["query", "analysis", "example"],
         template="""
 You are an expert chatbot focused on frailty care, tasked with creating a comprehensive, personalized care plan. Your goal is to synthesize the provided analysis into an actionable, tailored care plan that supports both the caretaker and the frailty patient.
 
@@ -107,9 +107,9 @@ You avoid humor or casual language due to the seriousness of the topic.
 
 You are provided the following information and analysis of the patient's condition.
 Patient's PRISMA-7 Responses, and Gait and TUG Test results:
-<input>
-{input}
-</input>
+<query>
+{query}
+</query>
 
 I have conducted the following analysis of the patient's condition:
 <analysis>
@@ -199,7 +199,7 @@ Here is an example format of a care plan:
         {
             "role": "system",
             "content": second_invocation_prompt.format(
-                input=str(input_data),
+                query=str(input_data),
                 analysis=first_result["result"],
                 example="Your example care plan here"
             )
