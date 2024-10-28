@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-
 const port = 5100;
 
 // Middleware to parse JSON bodies
@@ -18,6 +17,9 @@ app.listen(port, () => {
 // Health check endpoint
 app.get('/', (req, res) => res.json("API is running"));
 
+// Path to the Python interpreter in the virtual environment
+const pythonPath = path.join(__dirname, 'venv', 'bin', 'python');
+
 // Creating the plan and save it into text
 app.post('/plan', (req, res) => {
     // Get the input data from the request body
@@ -29,9 +31,7 @@ app.post('/plan', (req, res) => {
     // Path to main.py (assuming it's in the same directory)
     const scriptPath = path.join(__dirname, 'main.py');
 
-    const pythonPath = path.join(__dirname, 'venv', 'bin', 'python');
-
-    // Spawn a child process to run the Python script
+    // Spawn a child process to run the Python script using the virtual environment's Python interpreter
     const pythonProcess = spawn(pythonPath, [scriptPath, '--input_data', inputDataString]);
 
     let pythonOutput = '';
