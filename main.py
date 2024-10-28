@@ -46,7 +46,7 @@ def generate_frailty_care_plan(
 
     pc = Pinecone(api_key=pinecone_api_key)
 
-    index = pc.index(index_name)
+    index = pc.Index(index_name)
 
     # Initialize vector store
     from langchain.vectorstores import Pinecone as PineconeVectorStore
