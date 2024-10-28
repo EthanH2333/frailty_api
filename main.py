@@ -53,7 +53,7 @@ def generate_frailty_care_plan(
 
     vectorstore = PineconeVectorStore(
         index=index,
-        embedding_function=embeddings.embed_query,
+        embedding=embeddings,
     )
 
     # Create the retriever
