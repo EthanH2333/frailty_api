@@ -1,4 +1,6 @@
 import os
+import json
+import argparse
 
 # LangChain Imports necessary for RAG
 from langchain_openai import OpenAIEmbeddings # handle word embeddings
