@@ -220,13 +220,6 @@ def generate_frailty_care_plan(
     # Prepare the input data
     input_data = {
         **prisma7_dict,
-        "Are you older than 85 years?": "Yes" if older_than_85 else "No",
-        "Are you male?": "Yes" if is_male else "No",
-        "In general, do you have any health problems that require you to limit your activities?": "Yes" if has_limiting_health_problems else "No",
-        "Do you need someone to help you on a regular basis?": "Yes" if needs_regular_help else "No",
-        "In general, do you have any health problems that require you to stay at home?": "Yes" if has_homebound_health_problems else "No",
-        "If you need help, can you count on someone close to you?": "Yes" if has_close_help else "No",
-        "Do you regularly use a stick, walker or wheelchair to move about?": "Yes" if uses_mobility_aid else "No",
         "First Gait Test speed": f"{first_gait_test_speed} meters per second (m/s).",
         "First Gait Test time": f"{first_gait_test_time} seconds",
         "First TUG Test time": f"{first_tug_test_time} seconds",
