@@ -70,7 +70,7 @@ def generate_frailty_care_plan(
 
     Patient's PRISMA-7 Responses and GAIT/TUG Test Results:
     <input>
-    {input}
+    {query}
     </input>
 
     Relevant context from the knowledge base:
@@ -166,8 +166,9 @@ Here is an example format of a care plan:
     qa = RetrievalQA.from_chain_type(
         llm=chat,
         chain_type="stuff",
-        retriever=vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 10}),
-        return_source_documents=True
+        retriever=retriever,
+        return_source_documents=True,
+        chain_type_kwargs={"prompt": first_invocation_prompt}
     )
 
 
@@ -191,7 +192,7 @@ Here is an example format of a care plan:
     }
 
     # Run the first invocation
-    first_result = qa.invoke({"input": str(input_data)})
+    first_result = qa.invoke({"query": str(input_data)})
 
     # Run the second invocation
     final_care_plan = chat([
