@@ -1,16 +1,13 @@
-# main.py
-
 import os
 import json
 import argparse
 
 # LangChain imports
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Pinecone
-from langchain.prompts import PromptTemplate
-from langchain.chat_models import ChatOpenAI
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import Pinecone
+from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
-from langchain.chains.combine_documents import load_summarize_chain
+from langchain.chains.summarize import load_summarize_chain
 from langchain.schema import Document
 from langchain.callbacks.base import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
