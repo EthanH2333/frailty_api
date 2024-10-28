@@ -7,7 +7,6 @@ from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import Pinecone
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
-from langchain_pinecone import PineconeVectorStore
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -47,9 +46,12 @@ def generate_frailty_care_plan(
     if not pinecone_api_key or not pinecone_environment:
         raise ValueError("Pinecone API Key or Environment not found. Please set the PINECONE_API_KEY and PINECONE_ENVIRONMENT environment variables.")
 
-   # Connect to PineCone vector store
-    vectorstore = PineconeVectorStore(
-        index_name=os.environ["INDEX_NAME"],
+    # Initialize Pinecone
+    import pinecone
+    pinecone.init(api_key=pinecone_api_key, environment=pinecone_environment)
+
+    vectorstore = Pinecone.from_existing_index(
+        index_name=index_name,
         embedding=embeddings
     )
 
