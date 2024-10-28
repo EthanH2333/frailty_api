@@ -29,8 +29,10 @@ app.post('/plan', (req, res) => {
     // Path to main.py (assuming it's in the same directory)
     const scriptPath = path.join(__dirname, 'main.py');
 
+    const pythonPath = path.join(__dirname, 'venv', 'bin', 'python');
+
     // Spawn a child process to run the Python script
-    const pythonProcess = spawn('python3', [scriptPath, '--input_data', inputDataString]);
+    const pythonProcess = spawn(pythonPath, [scriptPath, '--input_data', inputDataString]);
 
     let pythonOutput = '';
     let pythonError = '';
