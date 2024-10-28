@@ -7,10 +7,6 @@ from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import Pinecone
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
-from langchain.chains.summarize import load_summarize_chain
-from langchain.schema import Document
-from langchain.callbacks.base import CallbackManager
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 # Load environment variables
 from dotenv import load_dotenv
