@@ -40,19 +40,20 @@ def generate_frailty_care_plan(
 
     # Connect to Pinecone vector store
     pinecone_api_key = os.environ.get("PINECONE_API_KEY")
-    pinecone_environment = os.environ.get("PINECONE_ENVIRONMENT")
     index_name = os.environ.get("INDEX_NAME")
 
-    if not pinecone_api_key or not pinecone_environment:
-        raise ValueError("Pinecone API Key or Environment not found. Please set the PINECONE_API_KEY and PINECONE_ENVIRONMENT environment variables.")
+    from pinecone import Pinecone, ServerlessSpec
 
-    # Initialize Pinecone
-    import pinecone
-    pinecone.init(api_key=pinecone_api_key, environment=pinecone_environment)
+    pc = Pinecone(api_key=pinecone_api_key)
 
-    vectorstore = Pinecone.from_existing_index(
-        index_name=index_name,
-        embedding=embeddings
+    index = pc.index(index_name)
+
+    # Initialize vector store
+    from langchain.vectorstores import Pinecone as PineconeVectorStore
+
+    vectorstore = PineconeVectorStore(
+        index=index,
+        embedding_function=embeddings.embed_query,
     )
 
     # Create the retriever
