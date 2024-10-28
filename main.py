@@ -192,10 +192,10 @@ Here is an example format of a care plan:
     }
 
     # Run the first invocation
-    first_result = qa.invoke({"query": str(input_data)})
+    first_result = qa.invoke(input = {"query": str(input_data)})
 
     # Run the second invocation
-    final_care_plan = chat([
+    final_care_plan = chat.invoke([
         {
             "role": "system",
             "content": second_invocation_prompt.format(
