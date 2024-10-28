@@ -3,7 +3,7 @@ import json
 import argparse
 
 # LangChain imports
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import Pinecone
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
@@ -11,6 +11,12 @@ from langchain.chains import RetrievalQA
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
+
+
+# Verify that the OpenAI API key is available
+openai_api_key = os.getenv('OPENAI_API_KEY')
+if not openai_api_key:
+    raise ValueError("OpenAI API Key not found. Please set the OPENAI_API_KEY environment variable.")
 
 # --------- Function to Generate Care Plan ---------
 
@@ -27,12 +33,18 @@ def generate_frailty_care_plan(
     uid: str
 ):
     # Initialize OpenAI Embeddings
-    embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-ada-002",
+        openai_api_key=openai_api_key
+    )
 
     # Connect to Pinecone vector store
     pinecone_api_key = os.environ.get("PINECONE_API_KEY")
     pinecone_environment = os.environ.get("PINECONE_ENVIRONMENT")
     index_name = os.environ.get("INDEX_NAME")
+
+    if not pinecone_api_key or not pinecone_environment:
+        raise ValueError("Pinecone API Key or Environment not found. Please set the PINECONE_API_KEY and PINECONE_ENVIRONMENT environment variables.")
 
     # Initialize Pinecone
     import pinecone
