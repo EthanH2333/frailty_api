@@ -65,9 +65,7 @@ def generate_frailty_care_plan(
     chat = ChatOpenAI(temperature=0, model="gpt-4")
 
     # Create the prompts
-    first_invocation_prompt = PromptTemplate(
-        input_variables=["query", "context"],
-        template = """
+    first_invocation_prompt = PromptTemplate.from_template("""
     You are an expert chatbot focused on frailty care, analyzing a patient's condition based on their PRISMA-7 survey responses and test results. Your task is to provide a factual analysis based solely on the given information. Do not make assumptions or infer information that is not explicitly stated.
 
     Patient's PRISMA-7 Responses and GAIT/TUG Test Results:
