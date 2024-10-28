@@ -65,41 +65,38 @@ def generate_frailty_care_plan(
     chat = ChatOpenAI(temperature=0, model="gpt-4")
 
     # Create the prompts
-    first_invocation_prompt = PromptTemplate(
-        input_variables=["input", "context"],
-        template="""
-You are an expert chatbot focused on frailty care, analyzing a patient's condition based on their PRISMA-7 survey responses and test results. Your task is to provide a factual analysis based solely on the given information. Do not make assumptions or infer information that is not explicitly stated.
+    first_invocation_prompt = PromptTemplate.from_template("""
+    You are an expert chatbot focused on frailty care, analyzing a patient's condition based on their PRISMA-7 survey responses and test results. Your task is to provide a factual analysis based solely on the given information. Do not make assumptions or infer information that is not explicitly stated.
 
-Patient's PRISMA-7 Responses and GAIT/TUG Test Results:
-<input>
-{input}
-</input>
+    Patient's PRISMA-7 Responses and GAIT/TUG Test Results:
+    <input>
+    {input}
+    </input>
 
-Relevant context from the knowledge base:
-<context>
-{context}
-</context>
+    Relevant context from the knowledge base:
+    <context>
+    {context}
+    </context>
 
-Please provide a detailed analysis considering only the information provided above. Address the following points:
+    Please provide a detailed analysis considering only the information provided above. Address the following points:
 
-1. Frailty status: For each response from Patient's PRISMA-7 Responses and GAIT/TUG Test Results, think about how it contributes to the patient's frailty status.
-2. Overall frailty assessment: Summarize what the given responses and test results indicate about the patient's frailty status.
-3. Key areas of concern: Identify the most critical aspects that need addressing, based solely on the provided information.
-4. Potential risks: Discuss potential risks that are directly related to the information given.
-5. Care needs: Suggest interventions or support strategies that are relevant to the specific issues mentioned in the input.
-6. Interrelations: Explain how the different aspects of the patient's condition, as described in the input, may impact each other.
+    1. Frailty status: For each response from Patient's PRISMA-7 Responses and GAIT/TUG Test Results, think about how it contributes to the patient's frailty status.
+    2. Overall frailty assessment: Summarize what the given responses and test results indicate about the patient's frailty status.
+    3. Key areas of concern: Identify the most critical aspects that need addressing, based solely on the provided information.
+    4. Potential risks: Discuss potential risks that are directly related to the information given.
+    5. Care needs: Suggest interventions or support strategies that are relevant to the specific issues mentioned in the input.
+    6. Interrelations: Explain how the different aspects of the patient's condition, as described in the input, may impact each other.
 
-In your analysis:
-- Be specific and refer only to the information provided in the input and context.
-- If the input or context doesn't provide sufficient information for any point, clearly state this lack of information.
-- Do not make assumptions or infer details that are not explicitly stated.
-- If you use information from the context, cite the source.
+    In your analysis:
+    - Be specific and refer only to the information provided in the input and context.
+    - If the input or context doesn't provide sufficient information for any point, clearly state this lack of information.
+    - Do not make assumptions or infer details that are not explicitly stated.
+    - If you use information from the context, cite the source.
 
-Your goal is to provide an accurate understanding of the patient's frailty status based strictly on the given information. If there are gaps in the information or if more assessment is needed, state this clearly.
+    Your goal is to provide an accurate understanding of the patient's frailty status based strictly on the given information. If there are gaps in the information or if more assessment is needed, state this clearly.
 
-Remember, do not provide any medical advice. Your role is to analyze the given information to support the development of a care plan by healthcare professionals.
-"""
-    )
+    Remember, do not provide any medical advice. Your role is to analyze the given information to support the development of a care plan by healthcare professionals.
+    """)
 
     second_invocation_prompt = PromptTemplate(
         input_variables=["input", "analysis", "example"],
@@ -169,10 +166,10 @@ Here is an example format of a care plan:
     qa = RetrievalQA.from_chain_type(
         llm=chat,
         chain_type="stuff",
-        retriever=retriever,
-        return_source_documents=True,
-        chain_type_kwargs={"prompt": first_invocation_prompt}
+        retriever=vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 10}),
+        return_source_documents=True
     )
+
 
     # Prepare the PRISMA-7 data
     prisma7_dict = {
@@ -194,7 +191,7 @@ Here is an example format of a care plan:
     }
 
     # Run the first invocation
-    first_result = qa.invoke({"query": str(input_data)})
+    first_result = qa.invoke({"input": str(input_data)})
 
     # Run the second invocation
     final_care_plan = chat([
