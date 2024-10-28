@@ -5,8 +5,9 @@ import argparse
 # LangChain imports
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import Pinecone
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -49,7 +50,7 @@ def generate_frailty_care_plan(
     index = pc.Index(index_name)
 
     # Initialize vector store
-    from langchain.vectorstores import Pinecone as PineconeVectorStore
+    from langchain_pinecone import Pinecone as PineconeVectorStore
 
     vectorstore = PineconeVectorStore(
         index=index,
