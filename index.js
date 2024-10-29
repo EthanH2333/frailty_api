@@ -2,12 +2,14 @@ const express = require('express');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
 
 const app = express();
 const port = 5100;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+app.use(cors());
 
 // Listening on the port
 app.listen(port, () => {
